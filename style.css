@@ -1,0 +1,89 @@
+:root{
+    --cell-size: 30px;
+    --stone-size: 20px;
+}
+
+
+body{
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(
+        135deg,
+        red,
+        blue
+    );
+    flex-direction: column;
+    gap: 30px;
+}
+
+.screen{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+.info{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
+    flex-direction: column;
+    padding: 10px;
+    width: 200px;
+}
+
+.stats{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 100px;
+}
+
+.stats div{
+    display: flex;
+    gap: 10px;
+}
+
+
+
+
+
+
+#board{
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+}
+
+
+.cell{
+    width: var(--cell-size);
+    height: var(--cell-size);
+    border: 1px solid black;
+    background: green;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stone{
+    width: var(--stone-size);
+    height: var(--stone-size);
+    border-radius: 50%;
+    background: black;
+}
+
+.back{
+    background: white;
+}
+
