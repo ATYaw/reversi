@@ -1,6 +1,7 @@
 /*
-
-
+Model
+Logic
+View
 
 */
 
@@ -9,9 +10,7 @@ const boardEl = document.getElementById("board");
 const countFrontEl = document.getElementById("count-front");
 const countBackEl = document.getElementById("count-back");
 const restartEl = document.getElementById("restart");
-// const titleEl = document.getElementById("title");
-// const gameScreenEl = document.getElementById("game-screen");
-// const titleScreenEl = document.getElementById("title-screen");
+
 
 const context = new AudioContext();
 
@@ -21,7 +20,7 @@ const BACK = 2;
 const BOARD_SIZE = 8;
 
 
-const board = [
+let board = [
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
@@ -47,9 +46,13 @@ let turn = FRONT;
 
 
 // main
-restartEl.addEventListener("click", restartGame);
-boardEl.addEventListener("click", checkCellEl);
-drawBoard();
+main();
+function main() {
+    restartEl.addEventListener("click", restartGame);
+    boardEl.addEventListener("click", clickCelleventList);
+    createBoard();
+    updateBoard();
+}
 
 
 
@@ -66,12 +69,12 @@ function restartGame() {
     board[7] = [0,0,0,0,0,0,0,0];
     
     turn = FRONT;
-    
-    drawBoard();
+
+    updateBoard();
 }
 
 
-function checkCellEl(e) {
+function clickCelleventList(e) {
     const cellEl = e.target.closest(".cell");
     
     if(!cellEl) return;
@@ -83,28 +86,69 @@ function checkCellEl(e) {
 }
 
 
+function updateCell(x, y) {
 
-// logic
-function drawBoard() {
-    boardEl.innerHTML = "";
-    
-    drawCount();
-    
-    
-    for(let y = 0; y < BOARD_SIZE; y++) {
-        for(let x = 0; x < BOARD_SIZE; x++) {
-            
-            const cellEl = createCellEl(x, y);
-            boardEl.appendChild(cellEl);
-            
-            if(board[y][x] !== 0) {
-                cellEl.appendChild(
-                    createStoneEl(board[y][x])
-                );
-            }
-        }
+    const cellEl = document.querySelector(
+        `[data-x="${x}"][data-y="${y}"]`
+    );
+
+    const stoneEl =
+        cellEl.querySelector(".stone");
+
+    if(board[y][x] === 0) {
+
+        stoneEl.style.display = "none";
+        stoneEl.classList.remove("back");
+
+        return;
     }
 
+    stoneEl.style.display = "block";
+
+    if(board[y][x] === BACK) {
+        stoneEl.classList.add("back");
+    }
+    else {
+        stoneEl.classList.remove("back");
+    }
+}
+
+
+function createBoard() {
+
+    boardEl.innerHTML = "";
+
+    for(let y = 0; y < BOARD_SIZE; y++) {
+
+        for(let x = 0; x < BOARD_SIZE; x++) {
+
+            const cellEl =
+                createCellEl(x, y);
+
+            const stoneEl =
+                document.createElement("div");
+
+            stoneEl.classList.add("stone");
+            stoneEl.style.display = "none";
+
+            cellEl.appendChild(stoneEl);
+
+            boardEl.appendChild(cellEl);
+        }
+    }
+}
+
+function updateBoard() {
+
+    drawCount();
+
+    for(let y = 0; y < BOARD_SIZE; y++) {
+
+        for(let x = 0; x < BOARD_SIZE; x++) {
+
+            updateCell(x, y);
+        }
+    }
 }
 
 
@@ -134,7 +178,7 @@ function createCellEl(x, y) {
 function createStoneEl(side) {
     const stoneEl = document.createElement("div");
     stoneEl.classList.add("stone");
-    
+
     if(side === BACK) {
         stoneEl.classList.add("back");
     }
@@ -151,6 +195,8 @@ function putStone(x, y) {
 
     board[y][x] = turn;
 
+    updateCell(x, y);
+
     flipStone(x, y);
 
     changeTurn();
@@ -159,7 +205,7 @@ function putStone(x, y) {
         changeTurn();
 
         if(!hasValidMove()) {
-            drawBoard();
+            updateBoard();
             gameOver();
             return;
         }
@@ -167,7 +213,6 @@ function putStone(x, y) {
         alert("pass");
     }
 
-    drawBoard();
 }
 
 
@@ -176,6 +221,8 @@ function flipStone(x, y) {
 
     for(const [fx, fy] of stones) {
         board[fy][fx] = turn;
+
+        updateCell(fx, fy);
     }
 }
 
@@ -295,3 +342,6 @@ function playSound() {
 
     oscillator.stop(context.currentTime + 0.1);
 }
+
+
+
